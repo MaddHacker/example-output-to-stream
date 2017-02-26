@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Example Output to Stream</title>
+    <meta name="application-name" content="Example Output to Stream" />
+    <meta name="author" content="MaddHacker <hacker@maddhacker.com>" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+            function addLog(log) {
+                $('#log-list').prepend('<div class="log-entry">' + log + '</div>');
+            }
+        </script>
+
+        <style type="text/css">
+            .flash {
+                -moz-animation: flash 1s ease-out;
+                -moz-animation-iteration-count: 1;
+                -webkit-animation: flash 1s ease-out;
+                -webkit-animation-iteration-count: 1;
+                -ms-animation: flash 1s ease-out;
+                -ms-animation-iteration-count: 1;
+            }
+            
+            @-webkit-keyframes flash {
+                0% {
+                    background-color: none;
+                }
+                50% {
+                    background-color: red;
+                }
+                100% {
+                    background-color: none;
+                }
+            }
+            
+            @-moz-keyframes flash {
+                0% {
+                    background-color: none;
+                }
+                50% {
+                    background-color: red;
+                }
+                100% {
+                    background-color: none;
+                }
+            }
+            
+            @-ms-keyframes flash {
+                0% {
+                    background-color: none;
+                }
+                50% {
+                    background-color: red;
+                }
+                100% {
+                    background-color: none;
+                }
+            }
+            
+            #log-list {
+                display: block;
+                width: 90%;
+                height: 600px;
+                overflow: auto;
+                margin-top: 10px;
+            }
+            
+            .log-entry {
+                margin: 20px 30px;
+                padding: 10px 25px;
+                border: 1px solid black;
+                border-radius: 20px;
+            }
+            
+            #log-list::-webkit-scrollbar-track {
+                /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
+                /* 	background-color: #326ca5; */
+                border-radius: 10px;
+            }
+            
+            #log-list::-webkit-scrollbar {
+                width: 20px;
+                /* 	background-color: #326ca5; */
+                border-radius: 10px;
+            }
+            
+            #log-list::-webkit-scrollbar-thumb {
+                background-color: blue;
+                border-radius: 10px;
+            }
+            
+            .status-info {
+                font-weight: bold;
+                width: 600px;
+                text-align: right;
+            }
+            
+            .status-info span {
+                float: right;
+                font-weight: normal;
+                color: blue;
+                display: inline-block;
+                width: 425px;
+                text-align: left;
+            }
+        </style>
+</head>
+
+<body>
+    <h1>Sample-Logging Window</h1>
+    <div class="status-info">
+        Connection status:&nbsp;<span id="websocket-connection">Disconnected</span>
+        <br /> Last Heartbeat:&nbsp;&nbsp;<span id="heartbeat">(none yet)</span>
+    </div>
+    <div id="log-list">
+
+    </div>
+</body>
+
+<script type="text/javascript">
+    $(function () {
+        var ws = new WebSocket('ws://' + location.hostname + ':9000');
+
+        ws.onopen = function (event) {
+            $('#websocket-connection').text('Open');
+            console.log('OPEN   ' + JSON.stringify(event));
+        };
+
+        ws.onclose = function (event) {
+            var str = 'Closed (' + event.code + ') :: ';
+            switch (event.code) {
+                case 1000:
+                    str += 'Normal closure';
+                    break;
+                case 1001:
+                    str += 'Going away';
+                    break;
+                case 1002:
+                    str += 'Protocol error';
+                    break;
+                case 1003:
+                    str += 'Unsupported data';
+                    break;
+                case 1005:
+                    str += 'No status provided';
+                    break;
+                case 1006:
+                    str += 'Abnormal close';
+                    break;
+                case 1007:
+                    str += 'Inconsistent data';
+                    break;
+                case 1008:
+                    str += 'Data policy violation';
+                    break;
+                case 1009:
+                    str += 'Data frame too large';
+                    break;
+                case 1010:
+                    str += 'Server negotiation nonexistent';
+                    break;
+                case 1011:
+                    str += 'Server error';
+                    break;
+                default:
+                    str += 'Unknown code';
+                    break;
+            }
+            $('#websocket-connection').text(str);
+        };
+
+        ws.onmessage = function (event) {
+            switch (event.data) {
+                case 'connected':
+                    $('#websocket-connection').text('Connected');
+                    break;
+                case 'hb':
+                    $('#websocket-connection').addClass('flash');
+                    setTimeout(function () {
+                        $('#websocket-connection').removeClass('flash');
+                    }, 300);
+                    $('#heartbeat').text((new Date()).toISOString());
+                    break;
+                default:
+                    addLog(event.data);
+                    break;
+            }
+        };
+    });
+
+</script>
+
+</html>
