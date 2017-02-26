@@ -5,6 +5,7 @@
 - Clone the repository: `git clone git@github.com:MaddHacker/example-output-to-file.git`
 - Install needed npm dependencies: `npm install`
 - Run the example: `node index.js`
+- Visit [the log view page](http://localhost:8888)
 
 # Slack
 This is one of several projects that are in the works, so feel free to reach out on [Slack](https://maddhacker.slack.com/).  Please email `slack at maddhacker dot com` for an invite.
