@@ -1,6 +1,9 @@
 'use strict';
 
-const O = require('output-manager'); // console logging
+const om = require('output-manager');
+const O = new om.Out(); // console logging
+const sOut = new om.Out(); // stream logging
+
 const WebSocketServer = require('ws').Server;
 const http = require('http');
 const fs = require('fs');
@@ -19,10 +22,8 @@ __wss.broadcast = function (data) {
 
 const start = () => {
     O.i('Setting up websocket log stream');
-    O.level(O.LogLevel.TRACE);
-    O.setLogger(function (msg) {
-        __wss.broadcast(msg);
-    });
+    sOut.level = om.LogLevel.TRACE;
+    sOut.output = (msg) => { __wss.broadcast(msg); };
     setTimeout(heartbeat, 1000);
     setTimeout(streamSomeData, 1500);
 }
@@ -31,15 +32,32 @@ __wss.on('connection', function connection(conn) {
     conn.on('message', function incoming(msg) {
         O.i('Incoming msg: ' + msg);
     });
+    O.i('Connected!')
     conn.send('Connected!');
 });
 
-const heartbeat = () => { O.i('heartbeat'); __wss.broadcast('hb'); setTimeout(heartbeat, 5000); }
-const streamSomeData = () => { O.t('tracing'); O.d('debugging'); O.i('info-ing'); O.w('warning'); O.e('erroring'); O.f('fatal-ing'); setTimeout(streamSomeData, 500); }
+const heartbeat = () => {
+    O.i('heartbeat');
+    sOut.i('heartbeat');
+    __wss.broadcast('hb');
+    setTimeout(heartbeat, 5000);
+}
+
+const streamSomeData = () => {
+    O.i('Streaming some data...');
+    sOut.t('tracing');
+    sOut.d('debugging');
+    sOut.i('info-ing');
+    sOut.w('warning');
+    sOut.e('erroring');
+    sOut.f('fatal-ing');
+    O.i('Sleeping...');
+    setTimeout(streamSomeData, 500);
+}
 
 
 O.i('Starting http server...');
-__server = http.createServer(function (request, response) {
+const __server = http.createServer(function (request, response) {
     fs.readFile('./index.html', function (err, data) {
         if (err) {
             response.writeHead(500, {
