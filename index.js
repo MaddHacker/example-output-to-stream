@@ -1,3 +1,5 @@
+'use strict';
+
 const O = require('output-manager'); // console logging
 const WebSocketServer = require('ws').Server;
 const http = require('http');
