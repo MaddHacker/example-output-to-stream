@@ -1,10 +1,10 @@
 {
   "name": "example-output-to-stream",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Example usage of output-manager npm streaming to websocket.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage --colors"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,7 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/MaddHacker/example-output-to-stream#readme",
   "dependencies": {
-    "output-manager": "^2.1.0",
+    "output-manager": "^3.0.0",
     "ws": "^2.1.0"
   },
   "devDependencies": {
