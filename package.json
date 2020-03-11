@@ -29,15 +29,15 @@
   "license": "Apache-2.0",
   "homepage": "https://github.com/MaddHacker/example-output-to-stream#readme",
   "engines": {
-    "node": ">=4.0.0",
-    "npm": ">=2.14.2"
+    "node": ">=10.0.0",
+    "npm": ">=5.0.0"
   },
   "dependencies": {
-    "output-manager": "^3.0.0",
-    "ws": "^2.1.0"
+    "output-manager": "^3.1.0",
+    "ws": "^7.2.3"
   },
   "devDependencies": {
-    "jest": "^19.0.2"
+    "jest": ">=25.1.0"
   },
   "jest": {
     "verbose": true
